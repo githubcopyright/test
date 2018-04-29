@@ -1,1 +1,0 @@
-boolProp testingCheatsEnabled true
