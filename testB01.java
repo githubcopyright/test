@@ -3,6 +3,8 @@ package test;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class testB01 {
 	
 	public String show(Long input) {
@@ -10,57 +12,50 @@ public class testB01 {
 		String output   = "";
 		String inputStr = String.valueOf(input);
 		
-		if (inputStr.length()<=13) {
-			
-			String prefix = "";
-			
-			for (int i = 0; i < 13-inputStr.length(); i++)	{	prefix = prefix + "*";	}                           // 轉換只到兆,補滿13位
-			
-			inputStr = prefix + inputStr;
-			
-			String[] fullStr = inputStr.split("");
+		if (inputStr.length()<=13 && input >= 0) {
+			String[] fullStr = StringUtils.leftPad(inputStr, 13, "*").split("");                                    // 轉換只到兆,補滿13位
 			
 			for (int i = 0; i < 13; i++ )
 				if (!fullStr[i].equals("*"))
-					output = output + getZhNum(fullStr[i]) + getDigit(i);
+					output = output + numberMap.get(fullStr[i]) + digitMap.get(i);
 		}
+		else
+			return "輸入金額有誤,只計算正數到兆元";
 		return 	output;
 	}
 
-	private static String getZhNum(String key) 
-	{
-		Map<String, String> numberMap = new HashMap<>();
-		numberMap.put("0","零");
-		numberMap.put("1","壹");
-		numberMap.put("2","貳");
-		numberMap.put("3","參");
-		numberMap.put("4","肆");
-		numberMap.put("5","伍");
-		numberMap.put("6","陸");
-		numberMap.put("7","柒");
-		numberMap.put("8","捌");
-		numberMap.put("9","玖");	
-		
-		return numberMap.get(key);
-	}
-	
-	private static String getDigit(Integer key) 
-	{
-		Map<Integer, String> digitMap = new HashMap<>();
-		digitMap.put(0, "兆");
-		digitMap.put(1, "仟");
-		digitMap.put(2, "佰");
-		digitMap.put(3, "拾");
-		digitMap.put(4, "億");
-		digitMap.put(5, "仟");
-		digitMap.put(6, "佰");
-		digitMap.put(7, "拾");
-		digitMap.put(8, "萬");
-		digitMap.put(9, "仟");
-		digitMap.put(10, "佰");
-		digitMap.put(11, "拾");
-		digitMap.put(12, "元");
-		
-		return digitMap.get(key);
-	}
+
+	Map<String, String> numberMap = new HashMap<String, String>() {
+		{
+			put("0","零");
+			put("1","壹");
+			put("2","貳");
+			put("3","參");
+			put("4","肆");
+			put("5","伍");
+			put("6","陸");
+			put("7","柒");
+			put("8","捌");
+			put("9","玖");
+		}
+	};
+
+	Map<Integer, String> digitMap = new HashMap<Integer, String>() {
+		{
+			put(0, "兆");
+			put(1, "仟");
+			put(2, "佰");
+			put(3, "拾");
+			put(4, "億");
+			put(5, "仟");
+			put(6, "佰");
+			put(7, "拾");
+			put(8, "萬");
+			put(9, "仟");
+			put(10, "佰");
+			put(11, "拾");
+			put(12, "元");
+		}
+	};
+
 }
