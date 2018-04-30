@@ -5,14 +5,12 @@ import java.util.Map;
 
 public class testB01 {
 	
-	public static void main(String[] args) {
-		Long input = 5000000000L;
+	public String show(Long input) {
 		
-		// 轉成文字陣列
+		String output   = "";
 		String inputStr = String.valueOf(input);
 		
-		if (inputStr.length()<13) {
-
+		if (inputStr.length()<=13) {
 			
 			String prefix = "";
 			
@@ -20,21 +18,16 @@ public class testB01 {
 			
 			inputStr = prefix + inputStr;
 			
-			
 			String[] fullStr = inputStr.split("");
 			
-			for (int i=0 ; i<13 ; i++) {
+			for (int i=0 ; i<13 ; i++)
 				if (!fullStr[i].equals("*"))
-					System.out.print(transToZhNum(fullStr[i])+getDigit(i));
-			}
-	
-
+					output = output + getZhNum(fullStr[i]) + getDigit(i);
 		}
-			
-
+		return 	output;
 	}
 
-	private static String transToZhNum(String key) 
+	private static String getZhNum(String key) 
 	{
 		Map<String, String> numberMap = new HashMap<>();
 		numberMap.put("0","零");
@@ -69,7 +62,5 @@ public class testB01 {
 		digitMap.put(12, "元");
 		
 		return digitMap.get(key);
-	}	
-	
-	
+	}
 }

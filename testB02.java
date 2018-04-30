@@ -1,188 +1,91 @@
 package test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class testB02 {
 	
-	public void show(Long input) {
+	public String show(Long input) {
 		
-		// 轉成文字陣列
-		String inputStr = String.valueOf(input);
+		String output = "";
 		
-		if (inputStr.length()<=13) {
-			
-			String prefix = "";
-			
-			for (int i = 0; i< 13- inputStr.length() ; i++) {prefix = prefix + "*";}
-			
-			inputStr = prefix + inputStr;
-			
-			
-			String[] fullStr = inputStr.split("");
-			
-			String result = "";
-			
-			for (int i=0 ; i<13 ; i++) {
-				if (!fullStr[i].equals("*")) {					
-					if (i%4==0) {
-						if (fullStr[i].equals("0"))
-							result = result + getDigit(i);
-						else {
+		if (input == 0) 
+			output = getZhNum("0") ;		
+		else {
 
-								result = result + transToZhNum(fullStr[i]) + getDigit(i);
-						}
-					}
-					else {
-						if (!fullStr[i].equals("0"))
-							result = result + transToZhNum(fullStr[i]) + getDigit(i);
-						else if (isBetweenNum(i,fullStr))
-							result = result + transToZhNum(fullStr[i]);
-						else if (i%4==2 && fullStr[i].equals("0") 
-								        && (fullStr[i+1].equals("0") || fullStr[i-1].equals("0") )
-								        && (i+2<13 && !fullStr[i+2].equals("0")))
-								result = result + transToZhNum(fullStr[i]);
-						else if (i%4==2 && (i+2<13 && fullStr[i+2].equals("0") 
-										&& (i+1<13 && !fullStr[i+1].equals("0"))))
-								result = result + transToZhNum(fullStr[i]);
+			String inputStr = String.valueOf(input);
 			
-					}
+			if (inputStr.length() <= 13) {
+				
+				String prefix = "";
+				
+				for (int i = 0; i < 13-inputStr.length(); i++) {	prefix = prefix + "*";	}                       // 轉換到兆,補滿13位
+					
+				inputStr = prefix + inputStr;				
+				
+				ArrayList<String[]> groups = getGroup(inputStr.split(""));		                                    // 分組:{[0,兆],[1,億],[2,萬],[3,(元)]}	
+				
+				for (int i = 0; i < 4; i++ ) {
+					
+					String chkZero = "";
+					
+					for (String t : groups.get(i)) 
+						if (!"*".equals(t))
+							chkZero = chkZero + t;
+					
+					if (chkZero.length()>0 && Integer.parseInt(chkZero)>0)                                          // 規則:整組都是補位或是0,就不顯示
+						output = output + transToZh(i, groups.get(i));					
 				}
 			}
-			
-			if(chechResult(result))
-				System.out.println("true");
-			else
-				System.out.println(input + " != " + result);
-			
 		}
+		if (output.length()>0)	output = output + "元";
 
+		// 驗證用,用完可刪除
+		if(forTest(output))                                                                                         
+			System.out.println("[true]" + input + "=" + output);
+		else
+			System.out.println("[fail]" + input + "!=" + output);
+		
+		return output;
+	}
+
+	private  String transToZh(int groupIndex,String[] group) {
+		
+		String result ="";
+		
+		for (int i=0 ; i<group.length ; i++ ) {                                                                     // {[0,仟],[1,佰],[2,拾],[3,(群組單位)]}
+			
+			if ( !"*".equals(group[i]) ) {
+				if (!"0".equals(group[i]))					
+					if (groupIndex==0)						
+						result = result + getZhNum(group[i]);
+					else						
+						result = result + getZhNum(group[i]) + getDigit(i);	
+				else
+					if ( i < group.length-1 && !"0".equals(group[i+1]))						
+						result = result + getZhNum(group[i]);				
+			}
+		}	
+		
+		if (result.length()>0)                                                                                      // 加上群組單位
+			result = result + getGroupDigit(groupIndex);
+		
+		return result;
 	}
 	
-//	public static void main(String[] args) {
-//		Long input = 1000350004101L;
-////		Long input = 700350004101L;
-////		Long input = 5702040L;
-//		
-//		// 轉成文字陣列
-//		String inputStr = String.valueOf(input);
-//		
-//		
-//		
-//		if (inputStr.length()<=13) {
-//
-//			
-//			String prefix = "";
-//			
-//			for (int i = 0; i< 13- inputStr.length() ; i++) {prefix = prefix + "*";}
-//			
-//			inputStr = prefix + inputStr;
-//			
-//			
-//			String[] fullStr = inputStr.split("");
-//			
-//			for (int i=0 ; i<13 ; i++) {
-//				if (!fullStr[i].equals("*")) {
-//					
-//					if (i%4==0) {
-//						if (fullStr[i].equals("0"))
-//							System.out.print(getDigit(i));
-//						else {
-////							if (isTripleZeroLeft(i,fullStr))
-//							if (i>1 && fullStr[i-1].equals("0"))
-//								System.out.print(transToZhNum("0")+transToZhNum(fullStr[i])+getDigit(i));							
-//							else
-//								System.out.print(transToZhNum(fullStr[i])+getDigit(i));
-//						}
-//					}
-//					else {
-//						if (!fullStr[i].equals("0"))
-//							System.out.print(transToZhNum(fullStr[i])+getDigit(i));						
-////						else if (fullStr[i].equals("0") && (isBetweenNum(i,fullStr) ))
-////							System.out.print(transToZhNum(fullStr[i]));						
-//					}
-//					
-//					
-//					
-//					
-//					
-////					if (fullStr[i].equals("0")) {
-////						
-////						if (i%4==0 && !isTripleZeroLeft(i,fullStr))
-////							System.out.print(getDigit(i));
-////						else if (!isBetweenZero(i,fullStr))
-////							System.out.print(transToZhNum(fullStr[i]));
-////
-////					}
-////					else {
-////
-////							System.out.print(transToZhNum(fullStr[i])+getDigit(i));
-////					}
-//				}
-//					
-//			}
-//	
-//
-//		}
-//			
-//
-//	}
-
-	private static boolean isBetweenNum(int i, String[] fullStr) {
-		if ((i+1<13 && i-1>0) && (!fullStr[i-1].equals("0") && !fullStr[i+1].equals("0") ))
-			return true;
-		return false;
+	private ArrayList<String[]> getGroup(String[] fullStr) {
+		
+		ArrayList<String[]> groups = new ArrayList<String[]>();	
+		groups.add(Arrays.copyOfRange(fullStr, 0, 1));
+		groups.add(Arrays.copyOfRange(fullStr, 1, 5));
+		groups.add(Arrays.copyOfRange(fullStr, 5, 9));
+		groups.add(Arrays.copyOfRange(fullStr, 9, 13));
+		return groups;
 	}
 
-//	private static boolean isBetweenZero(int i, String[] fullStr) {
-//		if ((i+1<13 && i-1>0) && (fullStr[i-1].equals("0") && fullStr[i+1].equals("0") ))
-//			return true;
-//		return false;
-//	}
-
-//	private static boolean isTripleZeroLeft(int i, String[] fullStr) {
-//		
-//		if (i==0 || (i>3 &&
-//				(  !fullStr[i-1].equals("0") 
-//				|| !fullStr[i-2].equals("0")
-//				|| !fullStr[i-3].equals("0"))))
-//			return false;
-//		
-//		return true;
-//	}
-
-//	private static boolean isNextZero(int i, String[] fullStr) {
-//		
-//		if (i+1<13 && fullStr[i+1].equals("0"))
-//			return true;
-//		
-//		return false;
-//	}
-
-	private boolean chechResult(String result) {
-		ArrayList<String> arr = new ArrayList<String>();
-		arr.add("伍萬零貳佰捌拾元");
-		arr.add("伍佰柒拾萬貳仟零肆拾元");
-		arr.add("柒仟零參億伍仟萬肆仟壹佰零壹元");
-		arr.add("壹兆零參億伍仟萬肆仟壹佰零壹元");
-		arr.add("伍萬零貳拾元");
-		arr.add("伍萬元");
-		arr.add("零元");
-		arr.add("壹元");
-		arr.add("玖兆元");
-		arr.add("玖兆零壹元");
-		
-		
-		if (arr.contains(result))
-			return true;
-		
-		
-		return false;
-	}
-
-	private String transToZhNum(String key) 
-	{
+	private  String getZhNum(String key) {
 		Map<String, String> numberMap = new HashMap<>();
 		numberMap.put("0","零");
 		numberMap.put("1","壹");
@@ -198,25 +101,49 @@ public class testB02 {
 		return numberMap.get(key);
 	}
 	
-	private String getDigit(Integer key) 
-	{
-		Map<Integer, String> digitMap = new HashMap<>();
-		digitMap.put(0, "兆");
-		digitMap.put(1, "仟");
-		digitMap.put(2, "佰");
-		digitMap.put(3, "拾");
-		digitMap.put(4, "億");
-		digitMap.put(5, "仟");
-		digitMap.put(6, "佰");
-		digitMap.put(7, "拾");
-		digitMap.put(8, "萬");
-		digitMap.put(9, "仟");
-		digitMap.put(10, "佰");
-		digitMap.put(11, "拾");
-		digitMap.put(12, "元");
+	private  String getGroupDigit(Integer key) {
+		Map<Integer, String> groupDigitMap = new HashMap<>();		
+		groupDigitMap.put(0, "兆");
+		groupDigitMap.put(1, "億");
+		groupDigitMap.put(2, "萬");
+		groupDigitMap.put(3, "");
+		
+		return groupDigitMap.get(key);
+	}	
+	
+	
+	private  String getDigit(Integer key) {
+		Map<Integer, String> digitMap = new HashMap<>();		
+		digitMap.put(0, "仟");
+		digitMap.put(1, "佰");
+		digitMap.put(2, "拾");
+		digitMap.put(3, "");
 		
 		return digitMap.get(key);
 	}	
 	
+	/**
+	 * 驗證用,用完可刪除
+	 * @param result
+	 * @return
+	 */
+	private  boolean forTest(String result) {
+		ArrayList<String> arr = new ArrayList<String>();
+		arr.add("伍萬零貳佰捌拾元");
+		arr.add("伍佰柒拾萬貳仟零肆拾元");
+		arr.add("柒仟零參億伍仟萬肆仟壹佰零壹元");
+		arr.add("壹兆零參億伍仟萬肆仟壹佰零壹元");
+		arr.add("伍萬零貳拾元");
+		arr.add("伍萬元");
+		arr.add("零元");
+		arr.add("壹元");
+		arr.add("玖兆元");
+		arr.add("玖兆零壹元");
+		
+		if (arr.contains(result))
+			return true;
+				
+		return false;
+	}
 	
 }
