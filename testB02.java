@@ -21,7 +21,7 @@ public class testB02 {
 				
 				String prefix = "";
 				
-				for (int i = 0; i < 13-inputStr.length(); i++) {	prefix = prefix + "*";	}                       // 轉換到兆,補滿13位
+				for (int i = 0; i < 13-inputStr.length(); i++) {	prefix = prefix + "*";	}                       // 轉換只到兆,補滿13位
 					
 				inputStr = prefix + inputStr;				
 				
@@ -41,13 +41,7 @@ public class testB02 {
 			}
 		}
 		if (output.length()>0)	output = output + "元";
-
-		// 驗證用,用完可刪除
-		if(forTest(output))                                                                                         
-			System.out.println("[true]" + input + "=" + output);
-		else
-			System.out.println("[fail]" + input + "!=" + output);
-		
+	
 		return output;
 	}
 
@@ -59,12 +53,12 @@ public class testB02 {
 			
 			if ( !"*".equals(group[i]) ) {
 				if (!"0".equals(group[i]))					
-					if (groupIndex==0)						
+					if (groupIndex==0)                                                                              // 兆群組沒有仟佰拾						
 						result = result + getZhNum(group[i]);
 					else						
 						result = result + getZhNum(group[i]) + getDigit(i);	
 				else
-					if ( i < group.length-1 && !"0".equals(group[i+1]))						
+					if ( i < group.length-1 && !"0".equals(group[i+1]))                                             // 下一位不是0才要顯示零 (避免連續零零的情況)
 						result = result + getZhNum(group[i]);				
 			}
 		}	
@@ -75,8 +69,7 @@ public class testB02 {
 		return result;
 	}
 	
-	private ArrayList<String[]> getGroup(String[] fullStr) {
-		
+	private ArrayList<String[]> getGroup(String[] fullStr) {		
 		ArrayList<String[]> groups = new ArrayList<String[]>();	
 		groups.add(Arrays.copyOfRange(fullStr, 0, 1));
 		groups.add(Arrays.copyOfRange(fullStr, 1, 5));
@@ -109,8 +102,7 @@ public class testB02 {
 		groupDigitMap.put(3, "");
 		
 		return groupDigitMap.get(key);
-	}	
-	
+	}
 	
 	private  String getDigit(Integer key) {
 		Map<Integer, String> digitMap = new HashMap<>();		
@@ -120,30 +112,5 @@ public class testB02 {
 		digitMap.put(3, "");
 		
 		return digitMap.get(key);
-	}	
-	
-	/**
-	 * 驗證用,用完可刪除
-	 * @param result
-	 * @return
-	 */
-	private  boolean forTest(String result) {
-		ArrayList<String> arr = new ArrayList<String>();
-		arr.add("伍萬零貳佰捌拾元");
-		arr.add("伍佰柒拾萬貳仟零肆拾元");
-		arr.add("柒仟零參億伍仟萬肆仟壹佰零壹元");
-		arr.add("壹兆零參億伍仟萬肆仟壹佰零壹元");
-		arr.add("伍萬零貳拾元");
-		arr.add("伍萬元");
-		arr.add("零元");
-		arr.add("壹元");
-		arr.add("玖兆元");
-		arr.add("玖兆零壹元");
-		
-		if (arr.contains(result))
-			return true;
-				
-		return false;
 	}
-	
 }

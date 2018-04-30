@@ -14,13 +14,13 @@ public class testB01 {
 			
 			String prefix = "";
 			
-			for (int i = 0; i< 13- inputStr.length() ; i++) {prefix = prefix + "*";}
+			for (int i = 0; i < 13-inputStr.length(); i++)	{	prefix = prefix + "*";	}                           // 轉換只到兆,補滿13位
 			
 			inputStr = prefix + inputStr;
 			
 			String[] fullStr = inputStr.split("");
 			
-			for (int i=0 ; i<13 ; i++)
+			for (int i = 0; i < 13; i++ )
 				if (!fullStr[i].equals("*"))
 					output = output + getZhNum(fullStr[i]) + getDigit(i);
 		}
