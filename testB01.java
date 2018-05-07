@@ -12,10 +12,10 @@ public class testB01 {
 		String output   = "";
 		String inputStr = String.valueOf(input);
 		
-		if (inputStr.length()<=13 && input >= 0) {
+		if (inputStr.length() <= 13 && input >= 0) {
 			String[] fullStr = StringUtils.leftPad(inputStr, 13, "*").split("");                                    // 轉換只到兆,補滿13位
 			
-			for (int i = 0; i < 13; i++ )
+			for (int i = 0; i < 13; i++)
 				if (!fullStr[i].equals("*"))
 					output = output + numberMap.get(fullStr[i]) + digitMap.get(i);
 		}

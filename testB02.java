@@ -37,7 +37,7 @@ public class testB02 {
 			else
 				return "輸入金額有誤,只計算正數到兆元";
 		}
-		if (output.length()>0)	output = output + "元";
+		if (output.length() > 0)	output = output + "元";
 	
 		return output;
 	}
@@ -46,13 +46,13 @@ public class testB02 {
 		
 		String result ="";
 		
-		for (int i=0 ; i<group.length ; i++ ) {                                                                     // {[0,仟],[1,佰],[2,拾],[3,(群組單位)]}
+		for (int i=0; i < group.length; i++) {                                                                     // {[0,仟],[1,佰],[2,拾],[3,(群組單位)]}
 			
-			if ( "*".equals(group[i]) )                                                                             // *是補位不是數字不處理
+			if ("*".equals(group[i]))                                                                             // *是補位不是數字不處理
 				continue;			
 			
 			if (!"0".equals(group[i]))					
-				if (groupIndex==0)                                                                                  // 兆群組沒有仟佰拾						
+				if (groupIndex == 0)                                                                                  // 兆群組沒有仟佰拾						
 					result = result + numberMap.get(group[i]);
 				else						
 					result = result + numberMap.get(group[i]) + digitMap.get(i);	
@@ -61,7 +61,7 @@ public class testB02 {
 					result = result + numberMap.get(group[i]);
 		}	
 		
-		if (result.length()>0)                                                                                      // 加上群組單位
+		if (result.length() > 0)                                                                                      // 加上群組單位
 			result = result + groupDigitMap.get(groupIndex);
 		
 		return result;
