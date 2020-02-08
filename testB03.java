@@ -11,7 +11,9 @@ public class testB02 {
 	
 	public String show(Long input) {
 		
-		String output = "";
+
+		String output = "SCR-2";
+
 		
 		if (input == 0) 
 			output = numberMap.get("0") ;		
